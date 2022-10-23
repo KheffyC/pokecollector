@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Pokemon List</h1>
+
+{% for p in pokemon%}
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ p.name }}</span>
+            <p>Type: {{ p.type }}</p>
+            <p>Lvl: {{ p.lvl }}</p>
+            {% if p.lvl > 10 %}
+                <p><strong> This Pokemon is well trained!</strong> </p>
+            {% else %}
+                <p><strong>This Pokemon needs more training</strong></p>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}
