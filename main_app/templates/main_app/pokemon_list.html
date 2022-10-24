@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Pokemon List</h1>
+
+{% for object in object_list%}
+    <div class="card">
+        <a href="{% url 'pokemon_detail' object.id %}">
+            <div class="card-content">
+                <span class="card-title">{{ object.name }}</span>
+                <p>Type: {{ object.type }}</p>
+                <p>Description: {{ object.description| linebreaks }}</p>
+                <p>Lvl: {{ object.lvl }}</p>
+            </div>
+        </a>
+    </div>
+{% endfor %}
+{% endblock %}

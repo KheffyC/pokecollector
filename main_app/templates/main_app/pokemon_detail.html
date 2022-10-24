@@ -10,6 +10,10 @@
         <p>Description: {{ object.description }}</p>
         <p>Level: {{ object.lvl }}</p>
     </div>
+    <div class="card-action">
+        <a href="{% url 'pokemon_update' object.id %}">Edit</a>
+        <a href="{% url 'pokemon_delete' object.id %}">Delete</a>
+      </div>
 </div>
 
 {% endblock %}

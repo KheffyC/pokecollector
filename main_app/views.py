@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Pokemon
+from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 # Create your views here.
 
@@ -11,9 +13,9 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
-def pokemon_index(request):
+class PokemonList(ListView):
+    model = Pokemon
     pokemon = Pokemon.objects.all()
-    return render(request, 'pokemon/index.html', { 'pokemon': pokemon })
 
 class PokemonDetailView(DetailView):
     model = Pokemon
@@ -23,3 +25,16 @@ class PokemonDetailView(DetailView):
         
         context['pokemon_list'] = Pokemon.objects.all()
         return context
+    
+class PokemonCreate(CreateView):
+    model = Pokemon
+    fields = '__all__'
+    
+class PokemonUpdate(UpdateView):
+    model = Pokemon
+    fields = ['type', 'description', 'lvl']
+
+class PokemonDelete(DeleteView):
+    model = Pokemon
+    success_url = '/pokemon/'
+    
