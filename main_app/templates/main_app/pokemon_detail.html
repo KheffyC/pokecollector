@@ -1,0 +1,15 @@
+{%  extends 'base.html' %}
+{% block content %}
+
+<h1>Pokemon Details</h1>
+
+<div class="card">
+    <span class="card-title">{{ object.name }}</span>
+    <div class="card-content">
+        <p>Type: {{ object.type }}</p>
+        <p>Description: {{ object.description }}</p>
+        <p>Level: {{ object.lvl }}</p>
+    </div>
+</div>
+
+{% endblock %}
