@@ -15,7 +15,7 @@ class Pokemon(models.Model):
         return reverse("pokemon_detail", kwargs={"pk": self.id})
 
 
-class Toy(models.Model):
+class Item(models.Model):
     name = models.CharField(max_length=50)
     color = models.CharField(max_length=20)
     
@@ -23,5 +23,5 @@ class Toy(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("toy_detail", kwargs={"pk": self.id})
+        return reverse("item_detail", kwargs={"pk": self.id})
     

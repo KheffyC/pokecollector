@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Pokemon
+from .models import Pokemon, Toy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -13,9 +13,10 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
+# ---- POKEMON VIEW CBVS ----
+
 class PokemonList(ListView):
     model = Pokemon
-    pokemon = Pokemon.objects.all()
 
 class PokemonDetailView(DetailView):
     model = Pokemon
@@ -37,4 +38,24 @@ class PokemonUpdate(UpdateView):
 class PokemonDelete(DeleteView):
     model = Pokemon
     success_url = '/pokemon/'
+
+
+#  ---- TOY VIEW CBV'S
+
+class ItemList(ListView):
+    model = Item
+
+class ItemDetailView(DetailView):
+    model = Item
     
+class ItemCreate(CreateView):
+    model = Item
+    fields = '__all__'
+    
+class ItemUpdate(UpdateView):
+    model = Item
+    fields = '__all__'
+    
+class ItemDelete(DeleteView):
+    model = Item
+    success_url = '/pokemon/'
