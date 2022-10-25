@@ -14,6 +14,21 @@
         <a href="{% url 'pokemon_update' object.id %}">Edit</a>
         <a href="{% url 'pokemon_delete' object.id %}">Delete</a>
       </div>
+      <div class="col s6">
+        <table class="striped">
+          <thead>
+            <tr><th>Date</th><th>Battle</th></tr>
+          </thead>
+          <tbody>
+            {% for training in object.training_set.all %}
+              <tr>
+                <td>{{training.date}}</td>
+                <td>{{training.get_battle_display}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 </div>
 
 {% endblock %}
