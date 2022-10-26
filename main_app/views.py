@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from .forms import TrainingForm
 from .models import Pokemon, Item
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
+
 
 # Create your views here.
 
@@ -18,14 +21,36 @@ def about(request):
 class PokemonList(ListView):
     model = Pokemon
 
-class PokemonDetailView(DetailView):
+class PokemonDetailView(FormMixin, DetailView):
     model = Pokemon
+    form_class = TrainingForm    
+
+    def get_success_url(self):
+        return reverse('pokemon_detail', kwargs={'pk': self.object.id})
     
-    def get_context_data(self, **kwargs):
-        context =  super().get_context_data(**kwargs)
-        
-        context['pokemon_list'] = Pokemon.objects.all()
-        return context
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+    
+    def form_valid(self, form):
+        # Here, we would record the user's interest using the message
+        # passed in form.cleaned_data['message']
+        return super().form_valid(form)
+    
+def add_training(request, pokemon_id):
+    form = TrainingForm(request.POST)
+    # validate the form
+    if form.is_valid():
+        # don't save the form to the db until it
+        # has the cat_id assigned
+        new_training = form.save(commit=False)
+        new_training.pokemon_id = pokemon_id
+        new_training.save()
+    return redirect('pokemon_detail', pokemon_id)
     
 class PokemonCreate(CreateView):
     model = Pokemon

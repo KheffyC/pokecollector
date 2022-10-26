@@ -3,32 +3,59 @@
 
 <h1>Pokemon Details</h1>
 
-<div class="card">
-    <span class="card-title">{{ object.name }}</span>
-    <div class="card-content">
-        <p>Type: {{ object.type }}</p>
-        <p>Description: {{ object.description }}</p>
-        <p>Level: {{ object.lvl }}</p>
+<div class="row">
+    <div class="col s6">
+        <div class="card">
+            <span class="card-title">{{ object.name }}</span>
+            <div class="card-content">
+                <p>Type: {{ object.type }}</p>
+                <p>Description: {{ object.description }}</p>
+                <p>Level: {{ object.lvl }}</p>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'pokemon_update' object.id %}">Edit</a>
+                <a href="{% url 'pokemon_delete' object.id %}">Delete</a>
+            </div>
+        </div>
     </div>
-    <div class="card-action">
-        <a href="{% url 'pokemon_update' object.id %}">Edit</a>
-        <a href="{% url 'pokemon_delete' object.id %}">Delete</a>
-      </div>
-      <div class="col s6">
+    <div class="col s6">
+        <br>
+    {% if object.train_for_today %}
+      <div class="card-panel teal-text center-align">{{ object.name }} has been trained enough for today</div>
+    {% else %}
+      <div class="card-panel red-text center-align">{{ object.name }} might need more training!</div>
+    {% endif %}
         <table class="striped">
-          <thead>
-            <tr><th>Date</th><th>Battle</th></tr>
-          </thead>
-          <tbody>
-            {% for training in object.training_set.all %}
-              <tr>
-                <td>{{training.date}}</td>
-                <td>{{training.get_battle_display}}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
+            <thead>
+                <tr><th>Date</th><th>Battle</th></tr>
+            </thead>
+            <tbody>
+                {% for training in object.training_set.all %}
+                <tr>
+                    <td>{{training.date}}</td>
+                    <td>{{training.get_battle_display}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-      </div>
+        <form action="{% url 'add_training' object.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit">
+        </form>
+    </div>
 </div>
+<script>
+    const dateEl = document.getElementById('id_date');
+    M.Datepicker.init(dateEl, {
+        format: 'yyyy-mm-dd',
+        defaultDate: new Date(),
+        setDefaultDate: true,
+        autoClose: true
+    });
+
+    const selectEl = document.getElementById('id_battle');
+    M.FormSelect.init(selectEl);
+</script>
 
 {% endblock %}
