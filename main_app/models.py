@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from datetime import date
+from datetime import datetime
 
 # Create your models here.
 
@@ -11,12 +11,24 @@ BATTLES = (
     ('T', 'vs Trainer')
 )
 
+class Item(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse("items_detail", kwargs={"pk": self.id})
+    
 
 class Pokemon(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     lvl = models.IntegerField()
+    
+    items = models.ManyToManyField(Item)
     
     def __str__(self):
         return self.name
@@ -25,7 +37,7 @@ class Pokemon(models.Model):
         return reverse("pokemon_detail", kwargs={"pk": self.id})
     
     def train_for_today(self):
-        return self.training_set.filter(date=date.today()).count() >= len(BATTLES) - 2
+        return self.training_set.filter(date=datetime.today()).count() >= len(BATTLES)
     
 class Training(models.Model):
     date = models.DateTimeField('training time')
@@ -44,14 +56,3 @@ class Training(models.Model):
         ordering = ['-date']
         
         
-
-class Item(models.Model):
-    name = models.CharField(max_length=50)
-    color = models.CharField(max_length=20)
-    
-    def __str__(self):
-        return self.name
-    
-    def get_absolute_url(self):
-        return reverse("item_detail", kwargs={"pk": self.id})
-    

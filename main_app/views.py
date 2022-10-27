@@ -24,6 +24,14 @@ class PokemonList(ListView):
 class PokemonDetailView(FormMixin, DetailView):
     model = Pokemon
     form_class = TrainingForm    
+    
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        pokemon = Pokemon.objects.get(id=self.object.id)
+        id_list = pokemon.items.all().values_list('id')
+        items_pokemon_doesnt_have = Item.objects.exclude(id__in=id_list) 
+        data['items'] = items_pokemon_doesnt_have
+        return data
 
     def get_success_url(self):
         return reverse('pokemon_detail', kwargs={'pk': self.object.id})
@@ -52,9 +60,14 @@ def add_training(request, pokemon_id):
         new_training.save()
     return redirect('pokemon_detail', pokemon_id)
     
+def assoc_item(request, pokemon_id, item_id):
+    Pokemon.objects.get(id=pokemon_id).items.add(item_id)
+    return redirect('pokemon_detail', pokemon_id)
+
+
 class PokemonCreate(CreateView):
     model = Pokemon
-    fields = '__all__'
+    fields = ['name', 'type', 'description', 'lvl']
     
 class PokemonUpdate(UpdateView):
     model = Pokemon
@@ -70,7 +83,7 @@ class PokemonDelete(DeleteView):
 class ItemList(ListView):
     model = Item
 
-class ItemDetailView(DetailView):
+class ItemDetail(DetailView):
     model = Item
     
 class ItemCreate(CreateView):
@@ -83,4 +96,4 @@ class ItemUpdate(UpdateView):
     
 class ItemDelete(DeleteView):
     model = Item
-    success_url = '/pokemon/'
+    success_url = '/items/'
